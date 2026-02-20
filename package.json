@@ -1,0 +1,21 @@
+{
+  "name": "imsg-gui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local iMessage analytics web UI",
+  "packageManager": "bun@1.3.5",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --filter @imsg/server dev & bun run --filter @imsg/web dev & wait",
+    "build": "bun run --workspaces build",
+    "test": "bun run --workspaces test",
+    "lint": "bun run --workspaces lint",
+    "typecheck": "bun run --workspaces typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

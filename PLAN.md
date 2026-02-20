@@ -40,7 +40,7 @@ The app must normalize both sources into one canonical model, compute descriptiv
 ### Backend
 
 1. Fastify + TypeScript REST API (`/api/v1`)
-2. SQLite canonical store (`better-sqlite3`)
+2. SQLite canonical store (migrating to `bun:sqlite` with adapter abstraction)
 3. Worker-thread job queue for ingestion, metrics, NLP, and reports
 4. Local-only runtime (localhost)
 
@@ -146,6 +146,13 @@ Tracking map:
 4. Phase 3: `imsg-gui-xm5.3` - Codex OAuth NLP + Privacy Controls
 5. Phase 4: `imsg-gui-xm5.1` - Reports + Hardening
 6. Cross-phase QA: `imsg-gui-xm5.5`
+7. Runtime migration feature: `imsg-gui-xm5.6` - Bun Runtime + SQLite Migration
+8. Runtime migration tasks:
+9. `imsg-gui-xm5.6.4` - Migrate workspace scripts/install to Bun
+10. `imsg-gui-xm5.6.2` - Introduce DB adapter abstraction
+11. `imsg-gui-xm5.6.3` - Add bun:sqlite adapter + parity tests
+12. `imsg-gui-xm5.6.1` - Cut over server to Bun runtime + remove better-sqlite3
+13. `imsg-gui-xm5.6.5` - Docs + regression validation
 
 Rules:
 
@@ -159,3 +166,34 @@ Rules:
 1. Build vertical slices per phase (ingest -> normalize -> view -> test).
 2. Keep APIs additive under `/api/v1`.
 3. Ship with privacy-first defaults enabled.
+4. Execution order: complete runtime/toolchain migration (`imsg-gui-xm5.6`) before continuing Phase 2/3 implementation.
+
+## 10. Runtime & Toolchain Migration (Bun)
+
+Scope:
+
+1. Bun package manager and scripts.
+2. Bun server runtime.
+3. SQLite driver migration to `bun:sqlite`.
+4. Zero-regression validation gate.
+
+Migration requirements:
+
+1. Replace npm-first scripts with Bun-first scripts at root and workspaces.
+2. Introduce internal DB adapter interfaces (`DatabaseClient`, `PreparedStatement`, `DbTransaction`).
+3. Implement adapter-based DB entrypoint and run parity checks.
+4. Cut over default DB adapter to `bun:sqlite`.
+5. Remove `better-sqlite3` dependencies and imports.
+6. Keep `/api/v1` contract behavior unchanged.
+
+Validation gate:
+
+1. `bun install`
+2. `bun run typecheck`
+3. `bun run test`
+4. `bun run build`
+5. API smoke checks for health/import/people/timeline/insights/reports
+
+Canonical runtime default:
+
+1. Bun is the canonical runtime and package manager after migration completion.

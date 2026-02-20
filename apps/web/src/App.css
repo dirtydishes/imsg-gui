@@ -1,0 +1,239 @@
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  animation: fade-in 340ms ease;
+}
+
+.sidebar {
+  padding: 24px 16px;
+  border-right: 1px solid rgba(5, 45, 59, 0.15);
+  background: linear-gradient(170deg, #072730 0%, #0f4f58 100%);
+  color: #e6faf9;
+}
+
+.sidebar h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.sidebar p {
+  margin-top: 8px;
+  opacity: 0.88;
+}
+
+.sidebar nav {
+  margin-top: 24px;
+  display: grid;
+  gap: 8px;
+}
+
+.sidebar button {
+  border: 1px solid rgba(231, 250, 250, 0.15);
+  border-radius: 10px;
+  text-align: left;
+  padding: 10px 12px;
+  color: #e9fcfc;
+  background: transparent;
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+
+.sidebar button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(2px);
+}
+
+.sidebar button.active {
+  background: rgba(255, 166, 0, 0.22);
+  border-color: rgba(255, 214, 119, 0.6);
+}
+
+.content {
+  padding: 20px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.topbar h2 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+.topbar p {
+  margin: 2px 0 0;
+  color: #304251;
+}
+
+.top-actions {
+  display: flex;
+  gap: 8px;
+}
+
+select,
+button {
+  border-radius: 10px;
+  border: 1px solid rgba(4, 54, 72, 0.2);
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.number-chip {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(6, 58, 77, 0.15);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.number-chip span {
+  color: #2a3b48;
+}
+
+.number-chip strong {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.1rem;
+}
+
+.panel-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.panel-grid.two-col {
+  grid-template-columns: 1fr 1fr;
+}
+
+.panel {
+  border-radius: 14px;
+  border: 1px solid rgba(5, 53, 67, 0.15);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(8px);
+  padding: 14px;
+}
+
+.panel h3,
+.panel h4 {
+  margin-top: 0;
+}
+
+.contact-list {
+  max-height: 420px;
+  overflow: auto;
+}
+
+.contact-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.detail-card {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 229, 178, 0.3);
+}
+
+.message-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px solid rgba(6, 58, 77, 0.08);
+  padding: 8px 0;
+}
+
+.message-row p {
+  margin: 2px 0 0;
+}
+
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+
+.upload-box {
+  display: block;
+  margin-top: 10px;
+}
+
+.upload-box input {
+  display: block;
+  margin-top: 6px;
+}
+
+.insight-list {
+  display: grid;
+  gap: 8px;
+}
+
+.insight-card {
+  border-radius: 12px;
+  border: 1px solid rgba(6, 58, 77, 0.15);
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.insight-card header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.merge-row {
+  border: 1px solid rgba(6, 58, 77, 0.12);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.privacy-on .sensitive {
+  filter: blur(4px);
+  user-select: none;
+}
+
+@media (max-width: 960px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: 0;
+    border-bottom: 1px solid rgba(5, 45, 59, 0.15);
+  }
+
+  .panel-grid.two-col,
+  .kpis {
+    grid-template-columns: 1fr;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

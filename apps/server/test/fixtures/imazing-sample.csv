@@ -1,0 +1,4 @@
+Date,Sender,Conversation,Direction,Text,Attachment
+2025-12-01 09:01:00,Alex,Alex,outbound,Hey there,
+2025-12-01 09:05:00,Alex,Alex,inbound,How are you?,
+2025-12-02 11:22:00,Group Chat,"Alex, Sam",inbound,Photo attached,/tmp/photo.jpg
