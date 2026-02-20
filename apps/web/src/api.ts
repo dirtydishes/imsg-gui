@@ -1,4 +1,5 @@
-export const API_BASE = import.meta.env.VITE_API_BASE ?? "http://127.0.0.1:8787/api/v1";
+// Default to same-origin API path so local dev avoids CORS/network-origin edge cases.
+export const API_BASE = import.meta.env.VITE_API_BASE ?? "/api/v1";
 
 export async function apiGet<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`);
