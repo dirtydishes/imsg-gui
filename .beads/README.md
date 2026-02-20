@@ -1,81 +1,74 @@
-# Beads - AI-Native Issue Tracking
+# iMsg GUI - Project Tracking (Beads)
 
-Welcome to Beads! This repository uses **Beads** for issue tracking - a modern, AI-native tool designed to live directly in your codebase alongside your code.
+This file is the operational tracker for the `imsg-gui` project.
+Product specification lives in `PLAN.md`; issue execution lives in Beads (`.beads/issues.jsonl`).
 
-## What is Beads?
+## Project Description
 
-Beads is issue tracking that lives in your repo, making it perfect for AI coding agents and developers who want their issues close to their code. No web UI required - everything works through the CLI and integrates seamlessly with git.
+`imsg-gui` is a localhost-first TypeScript web application for iMessage analytics.
 
-**Learn more:** [github.com/steveyegge/beads](https://github.com/steveyegge/beads)
+Primary capabilities:
 
-## Quick Start
+1. Ingest local macOS Messages data from `~/Library/Messages/chat.db` (read-only).
+2. Import exported history from iMazing CSV/TXT.
+3. Normalize both sources into one canonical SQLite model.
+4. Provide a privacy-first analytics dashboard (people, conversations, timeline, insights, imports, reports).
+5. Support identity merge workflows and report export.
+6. Support NLP insight jobs on explicit user-selected data slices.
 
-### Essential Commands
+## Current Architecture Snapshot
+
+1. Runtime and package manager: **Bun**.
+2. Backend: Fastify + Bun SQLite (`bun:sqlite`), versioned under `/api/v1`.
+3. Frontend: React + Vite + TanStack Query + ECharts.
+4. Shared contracts: `packages/shared`.
+5. Issue tracking: Beads, with epic and phase issues mapped in `PLAN.md`.
+
+## Progress Tracker
+
+| Track | Issue ID | Status | Notes |
+|---|---|---|---|
+| Epic: Local iMessage Analytics WebUI | `imsg-gui-xm5` | Open | Umbrella delivery issue |
+| Phase 1: Core Platform | `imsg-gui-xm5.4` | Closed | Delivered |
+| Phase 2: TXT/Confidence/Identity | `imsg-gui-xm5.2` | Open | Next core product phase |
+| Phase 3: OAuth/NLP/Privacy | `imsg-gui-xm5.3` | Open | Follows Phase 2 |
+| Phase 4: Reports/Hardening | `imsg-gui-xm5.1` | Open | Final stabilization |
+| Cross-phase QA | `imsg-gui-xm5.5` | Open | Ongoing validation track |
+| Bun + SQLite Migration | `imsg-gui-xm5.6` | Closed | Completed and validated |
+
+### Bun Migration Subtasks (Completed)
+
+| Task | Issue ID | Status |
+|---|---|---|
+| Migrate workspace scripts/install to Bun | `imsg-gui-xm5.6.4` | Closed |
+| Introduce DB adapter abstraction | `imsg-gui-xm5.6.2` | Closed |
+| Add `bun:sqlite` adapter + parity tests | `imsg-gui-xm5.6.3` | Closed |
+| Cut over runtime and remove `better-sqlite3` | `imsg-gui-xm5.6.1` | Closed |
+| Docs + regression validation | `imsg-gui-xm5.6.5` | Closed |
+
+## Quality Gate Status
+
+Bun migration gate completed with:
+
+1. `bun run typecheck` passing.
+2. `bun run test` passing.
+3. `bun run build` passing.
+4. API smoke checks passing (`health`, `imports`, `people`, `timeline`, `insights`, `reports`).
+
+## Working Rules
+
+1. Create/claim issues in Beads before implementation work.
+2. Keep `PLAN.md` aligned with major execution-track changes.
+3. Track follow-up work as new Beads issues instead of ad-hoc TODO notes.
+4. End each work session with `bd sync --flush-only`.
+
+## Useful Commands
 
 ```bash
-# Create new issues
-bd create "Add user authentication"
-
-# View all issues
-bd list
-
-# View issue details
+bd ready
+bd list --status open
 bd show <issue-id>
-
-# Update issue status
 bd update <issue-id> --status in_progress
-bd update <issue-id> --status done
-
-# Sync with git remote
-bd sync
+bd close <issue-id>
+bd sync --flush-only
 ```
-
-### Working with Issues
-
-Issues in Beads are:
-- **Git-native**: Stored in `.beads/issues.jsonl` and synced like code
-- **AI-friendly**: CLI-first design works perfectly with AI coding agents
-- **Branch-aware**: Issues can follow your branch workflow
-- **Always in sync**: Auto-syncs with your commits
-
-## Why Beads?
-
-✨ **AI-Native Design**
-- Built specifically for AI-assisted development workflows
-- CLI-first interface works seamlessly with AI coding agents
-- No context switching to web UIs
-
-🚀 **Developer Focused**
-- Issues live in your repo, right next to your code
-- Works offline, syncs when you push
-- Fast, lightweight, and stays out of your way
-
-🔧 **Git Integration**
-- Automatic sync with git commits
-- Branch-aware issue tracking
-- Intelligent JSONL merge resolution
-
-## Get Started with Beads
-
-Try Beads in your own projects:
-
-```bash
-# Install Beads
-curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
-
-# Initialize in your repo
-bd init
-
-# Create your first issue
-bd create "Try out Beads"
-```
-
-## Learn More
-
-- **Documentation**: [github.com/steveyegge/beads/docs](https://github.com/steveyegge/beads/tree/main/docs)
-- **Quick Start Guide**: Run `bd quickstart`
-- **Examples**: [github.com/steveyegge/beads/examples](https://github.com/steveyegge/beads/tree/main/examples)
-
----
-
-*Beads: Issue tracking that moves at the speed of thought* ⚡
