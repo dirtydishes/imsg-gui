@@ -8,3 +8,5 @@ coverage/
 .DS_Store
 sqlite-data/
 apps/server/data/
+
+apps/server/apps/server/data/
