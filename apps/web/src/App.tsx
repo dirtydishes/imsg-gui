@@ -130,7 +130,28 @@ export default function App() {
   });
 
   const syncMutation = useMutation({
-    mutationFn: () => apiPost<{ insertedMessages: number; scannedMessages: number }>("/sources/macos/sync"),
+    mutationFn: async () => {
+      let runs = 0;
+      let totalInserted = 0;
+      let totalScanned = 0;
+      let keepGoing = true;
+
+      while (keepGoing && runs < 250) {
+        const response = await apiPost<{
+          sourceId: string;
+          insertedMessages: number;
+          scannedMessages: number;
+          nextWatermark: number;
+        }>("/sources/macos/sync");
+
+        runs += 1;
+        totalInserted += response.insertedMessages;
+        totalScanned += response.scannedMessages;
+        keepGoing = response.scannedMessages >= 5000;
+      }
+
+      return { runs, totalInserted, totalScanned };
+    },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["people"] });
       void queryClient.invalidateQueries({ queryKey: ["timeline"] });
@@ -139,7 +160,14 @@ export default function App() {
   });
 
   const uploadMutation = useMutation({
-    mutationFn: (file: File) => apiUpload<{ importId: string }>("/imports/imazing", file),
+    mutationFn: (file: File) =>
+      apiUpload<{
+        sourceId: string;
+        importId: string;
+        insertedMessages: number;
+        totalParsedMessages: number;
+        qualityScore: number;
+      }>("/imports/imazing", file),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["imports"] });
       void queryClient.invalidateQueries({ queryKey: ["people"] });
@@ -370,6 +398,17 @@ export default function App() {
               <button type="button" onClick={() => syncMutation.mutate()} disabled={syncMutation.isPending}>
                 Sync Local macOS Messages
               </button>
+              {syncMutation.isPending && <p>Sync in progress. Pulling macOS messages in 5,000-row batches...</p>}
+              {syncMutation.isError && (
+                <p>Sync failed: {syncMutation.error instanceof Error ? syncMutation.error.message : "Unknown error"}</p>
+              )}
+              {syncMutation.data && (
+                <p>
+                  Sync complete: {syncMutation.data.totalInserted.toLocaleString()} inserted from{" "}
+                  {syncMutation.data.totalScanned.toLocaleString()} scanned across {syncMutation.data.runs} batch(es).
+                </p>
+              )}
+              <p>Tip: if People looks empty, switch range to “All time” in the top-right filter.</p>
               <label className="upload-box">
                 <span>Import iMazing CSV/TXT</span>
                 <input
@@ -383,6 +422,18 @@ export default function App() {
                   }}
                 />
               </label>
+              {uploadMutation.isPending && <p>Import upload in progress...</p>}
+              {uploadMutation.isError && (
+                <p>
+                  Import failed: {uploadMutation.error instanceof Error ? uploadMutation.error.message : "Unknown error"}
+                </p>
+              )}
+              {uploadMutation.data && (
+                <p>
+                  Import complete: {uploadMutation.data.insertedMessages}/{uploadMutation.data.totalParsedMessages} inserted
+                  (quality {uploadMutation.data.qualityScore.toFixed(1)}%).
+                </p>
+              )}
             </article>
 
             <article className="panel">
